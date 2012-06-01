@@ -901,6 +901,14 @@ void RenderBlock::layoutInlineChildren(bool relayoutChildren, int& repaintTop, i
             lastHeight = height();
             lineMidpointState.reset();
             resolver.setPosition(end);
+
+            // Exit loop if we have already filled the container
+            // when overflow mode is 'hidden'
+            if (style()->height().value()) {
+                EOverflow ov = style()->overflowY();
+                if (ov == OHIDDEN && height() > style()->height().value())
+                    break;
+            }
         }
 
         if (endLine) {
